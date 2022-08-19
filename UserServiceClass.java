@@ -1,3 +1,5 @@
+package org.example;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,7 +13,8 @@ public class UserServiceClass implements UserService {
     @Override
     public User addUser(User user) {
         try{
-            Connection connection = DbConnection.getConnection();
+
+            Connection connection = DbConnection.getBasicDataSource().getConnection();
             String query = "insert into user (username,password,phone,birthdate) values (?,?,?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, user.getUsername());
@@ -30,7 +33,7 @@ public class UserServiceClass implements UserService {
     @Override
     public User updateUser(String id, User user) {
         try{
-            Connection connection = DbConnection.getConnection();
+            Connection connection = DbConnection.getBasicDataSource().getConnection();
             String query = "update user set username = ?, password = ?, phone = ?, birth = ? where id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, user.getUsername());
@@ -49,7 +52,7 @@ public class UserServiceClass implements UserService {
     @Override
     public boolean deleteUser(String id) {
         try{
-            Connection connection = DbConnection.getConnection();
+            Connection connection = DbConnection.getBasicDataSource().getConnection();
             String query = "delete from user where id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, Integer.parseInt(id));
@@ -63,7 +66,8 @@ public class UserServiceClass implements UserService {
 
     @Override
     public User getUser(String id) {
-        try(Connection connection = DbConnection.getConnection()){
+        try{
+            Connection connection = DbConnection.getBasicDataSource().getConnection();
             String query = "select * from user where id = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, id);
@@ -86,7 +90,8 @@ public class UserServiceClass implements UserService {
     @Override
     public List<User> getAllUser() {
         List<User> users = new ArrayList<>();
-        try(Connection connection = DbConnection.getConnection()){
+        try{
+            Connection connection = DbConnection.getBasicDataSource().getConnection();
             String query = "select * from user";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             ResultSet result = preparedStatement.executeQuery();
@@ -108,7 +113,7 @@ public class UserServiceClass implements UserService {
     @Override
     public Optional<User> getUserByPhone(String phone) {
         try{
-            Connection connection = DbConnection.getConnection();
+            Connection connection = DbConnection.getBasicDataSource().getConnection();
             String query = "select * from user where phone = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, phone);
