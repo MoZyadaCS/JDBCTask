@@ -1,24 +1,24 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-// singleton class for database connection
+package org.example;
+
+import org.apache.commons.dbcp2.BasicDataSource;
+
 public class DbConnection {
     private static String url = "jdbc:mysql://localhost:3306/iti";
     private static String user ="root";
-    private static String password = "root";
-    private static Connection connection;
+    private static String password = "";
 
-    private DbConnection(){
-    }
-    public static Connection getConnection(){
-        if(connection == null){
-            try{
-                connection = DriverManager.getConnection(url, user, password);
-            }catch(SQLException e) {
-                e.printStackTrace();
-            }
+    private static BasicDataSource basicDataSource;
+    public static BasicDataSource getBasicDataSource(){
+        if(basicDataSource == null){
+            BasicDataSource dataSource = new BasicDataSource();
+            dataSource.setUrl(url);
+            dataSource.setUsername(user);
+            dataSource.setPassword(password);
+            dataSource.setMinIdle(10);
+            dataSource.setMaxIdle(50);
+
+            basicDataSource = dataSource;
         }
-        return connection;
+        return basicDataSource;
     }
-
 }
